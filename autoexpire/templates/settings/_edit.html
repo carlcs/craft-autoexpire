@@ -1,0 +1,122 @@
+{% extends '_layouts/cp' %}
+{% import '_includes/forms' as forms %}
+
+{% set crumbs = [
+    { label: 'Settings'|t, url: url('settings') },
+    { label: 'Plugins'|t, url: url('settings/plugins') },
+    { label: 'Auto Expire', url: url('settings/plugins/autoexpire/index') }
+] %}
+
+{% if rule is not defined and ruleId is defined %}
+	{% set rule = craft.autoExpire.getRuleById(ruleId) %}
+	{% if not rule %}{% exit 404 %}{% endif %}
+{% endif %}
+
+{% set isNewRule = (rule is not defined or not rule.id) %}
+
+{% set title = not isNewRule ? rule.name : 'Add a new rule'|t %}
+
+{% set sections = [] %}
+{% for section in craft.sections.getAllSections() %}
+    {% if section.type != 'single' %}
+        {% set sections = sections|merge([section]) %}
+    {% endif %}
+{% endfor %}
+
+{% set content %}
+    <div {% if sections|length %} class="hidden"{% endif %}>
+		<p>{{ 'No sections are available.'|t }}</p>
+	</div>
+
+    {% if sections|length %}
+        <form method="post" accept-charset="UTF-8" data-saveshortcut>
+            {{ getCsrfInput() }}
+    		<input type="hidden" name="action" value="autoExpire/saveRule">
+    		<input type="hidden" name="redirect" value="settings/plugins/autoexpire/index">
+            {% if not isNewRule %}<input type="hidden" name="id" value="{{ rule.id }}">{% endif %}
+
+            {{ forms.textField({
+                label: 'Name'|t,
+                instructions: 'What this expiration rule will be called in the CP.'|t,
+                required: true,
+                first: true,
+                id: 'name',
+                name: 'name',
+                value: rule is defined ? rule.name : null,
+                errors: rule is defined ? rule.errors('name') : null,
+            }) }}
+
+            {% if CraftEdition >= CraftClient %}
+        		{% set sectionOptions = [] %}
+        		{% for section in sections %}
+        			{% set sectionOptions = sectionOptions|merge([{ label: section.name|t, value: section.id }]) %}
+        		{% endfor %}
+
+        		{{ forms.selectField({
+        			label: 'Section'|t,
+                    instructions: 'Which section do you want to apply this expiration rule to?'|t,
+        			id: 'section',
+        			name: 'section',
+        			options: sectionOptions,
+        			value: rule is defined ? rule.section : null,
+        			toggle: true,
+        			targetPrefix: 'section'
+        		}) }}
+
+        		{% set selectedSectionId = rule is defined ? rule.section : null %}
+        	{% else %}
+        		{% set selectedSectionId = sections[0].id %}
+        		<input type="hidden" name="section" value="{{ selectedSectionId }}">
+        	{% endif %}
+
+        	{% for section in sections %}
+        		{% set showSection = ((not selectedSectionId and loop.first) or selectedSectionId == section.id) %}
+        		<div id="section{{ section.id }}"{% if not showSection %} class="hidden"{% endif %}>
+
+        			{% set entryTypeOptions = [] %}
+        			{% for entryType in section.getEntryTypes() %}
+        				{% set entryTypeOptions = entryTypeOptions|merge([{ label: entryType.name|t, value: entryType.id }]) %}
+        			{% endfor %}
+
+        			{% if entryTypeOptions|length == 1 %}
+        				<input type="hidden" name="sections[{{ section.id }}][entryType]" value="{{ entryTypeOptions[0]['value'] }}" />
+        			{% else %}
+        				{{ forms.selectField({
+        					label: 'Entry Type'|t,
+                            instructions: 'Which entry type do you want to apply this expiration rule to?'|t,
+        					id: 'entryType',
+        					name: 'sections['~section.id~'][entryType]',
+        					options: entryTypeOptions,
+        					value: rule is defined ? rule.entryType : null,
+        					toggle: true,
+        					targetPrefix: 'section'~section.id~'-type'
+        				}) }}
+        			{% endif %}
+
+        		</div>
+        	{% endfor %}
+
+            {{ forms.textField({
+                label: 'Expiration Date'|t,
+                instructions: 'The expiration date which is set automatically on entry save. You can include tags that output entry properties, such as {ex}.'|t({ex: '<code>{postDate|date_modify(\'+7 days\')}</code>'}),
+			    required: true,
+                class: 'code',
+                id: 'expirationDate',
+                name: 'expirationDate',
+                value: rule is defined ? rule.expirationDate : null,
+                errors: rule is defined ? rule.errors('expirationDate') : null,
+            }) }}
+
+            {{ forms.checkboxField({
+                label: 'Allow users to overwrite the automatically set expiration date'|t,
+                id: 'allowOverwrite',
+                name: 'allowOverwrite',
+                checked: rule is defined ? rule.allowOverwrite : null,
+            }) }}
+
+    		<div class="buttons">
+    			<input type="submit" class="btn submit" value="{{ 'Save'|t }}">
+    		</div>
+    	</form>
+    {% endif %}
+{% endset %}
