@@ -16,6 +16,11 @@ class AutoExpirePlugin extends BasePlugin
                 return '1.0';
         }
 
+        function getSchemaVersion()
+	{
+		return null;
+	}
+
         function getDeveloper()
         {
                 return 'carlcs';
@@ -24,6 +29,16 @@ class AutoExpirePlugin extends BasePlugin
         function getDeveloperUrl()
         {
                 return 'https://github.com/carlcs/craft-autoexpire';
+        }
+
+        function getDocumentationUrl()
+        {
+                return 'https://github.com/carlcs/craft-autoexpire';
+        }
+
+        function getReleaseFeedUrl()
+        {
+                return 'https://github.com/carlcs/craft-autoexpire/raw/master/releases.json';
         }
 
         public function getSettingsUrl()
@@ -69,7 +84,7 @@ class AutoExpirePlugin extends BasePlugin
                                                 {
                                                         Craft::log('(Auto Expire) Couldn’t create a date for “'.$rule->name.'”', LogLevel::Error);
 
-                                                        break 3;
+                                                        break;
                                                 }
 
                                                 $entry->expiryDate = $newExpiryDate;
