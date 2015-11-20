@@ -1,8 +1,8 @@
 [
   {
-    "version": "1.0.1",
-    "downloadUrl": "https://github.com/carlcs/craft-autoexpire/archive/v1.0.1.zip",
-    "date": "2015-11-06T13:00:00-01:00",
+    "version": "1.1",
+    "downloadUrl": "https://github.com/carlcs/craft-autoexpire/archive/v1.1.zip",
+    "date": "2015-11-20T20:00:00-01:00",
     "notes": [
       "[Added] It is now also possible to add rules to set entry post dates."
     ]
