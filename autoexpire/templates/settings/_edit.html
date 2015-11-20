@@ -23,6 +23,11 @@
     {% endif %}
 {% endfor %}
 
+{% set dateFieldOptions = [
+    { label: 'Post Date'|t, value: 'postDate' },
+    { label: 'Expiry Date'|t, value: 'expiryDate' }
+] %}
+
 {% set content %}
     <div {% if sections|length %} class="hidden"{% endif %}>
 		<p>{{ 'No sections are available.'|t }}</p>
@@ -37,7 +42,7 @@
 
             {{ forms.textField({
                 label: 'Name'|t,
-                instructions: 'What this expiration rule will be called in the CP.'|t,
+                instructions: 'What this rule will be called in the CP.'|t,
                 required: true,
                 first: true,
                 id: 'name',
@@ -54,7 +59,7 @@
 
         		{{ forms.selectField({
         			label: 'Section'|t,
-                    instructions: 'Which section do you want to apply this expiration rule to?'|t,
+                    instructions: 'Which section do you want to apply this rule to?'|t,
         			id: 'section',
         			name: 'section',
         			options: sectionOptions,
@@ -83,7 +88,7 @@
         			{% else %}
         				{{ forms.selectField({
         					label: 'Entry Type'|t,
-                            instructions: 'Which entry type do you want to apply this expiration rule to?'|t,
+                            instructions: 'Which entry type do you want to apply this rule to?'|t,
         					id: 'entryType',
         					name: 'sections['~section.id~'][entryType]',
         					options: entryTypeOptions,
@@ -96,9 +101,18 @@
         		</div>
         	{% endfor %}
 
+            {{ forms.selectField({
+                label: 'Field'|t,
+                instructions: 'Which field do you want to apply this rule to?'|t,
+                id: 'field',
+                name: 'field',
+                options: dateFieldOptions,
+                value: rule is defined ? rule.field : null,
+            }) }}
+
             {{ forms.textField({
-                label: 'Expiration Date'|t,
-                instructions: 'The expiration date which is set automatically on entry save. You can include tags that output entry properties, such as {ex}.'|t({ex: '<code>{postDate|date_modify(\'+7 days\')}</code>'}),
+                label: 'Date/Time'|t,
+                instructions: 'The date which is set automatically on entry save. You can include tags that output entry properties, such as {ex}.'|t({ex: '<code>{postDate|date_modify(\'+7 days\')}</code>'}),
 			    required: true,
                 class: 'code',
                 id: 'expirationDate',
@@ -108,7 +122,7 @@
             }) }}
 
             {{ forms.checkboxField({
-                label: 'Allow users to overwrite the automatically set expiration date'|t,
+                label: 'Allow users to overwrite the automatically set date'|t,
                 id: 'allowOverwrite',
                 name: 'allowOverwrite',
                 checked: rule is defined ? rule.allowOverwrite : null,

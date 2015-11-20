@@ -52,6 +52,7 @@ class AutoExpireService extends BaseApplicationComponent
 		$ruleRecord->name           = $rule->name;
 		$ruleRecord->section        = $rule->section;
 		$ruleRecord->entryType      = $rule->entryType;
+                $ruleRecord->field          = $rule->field;
 		$ruleRecord->expirationDate = $rule->expirationDate;
 		$ruleRecord->allowOverwrite = $rule->allowOverwrite;
 
@@ -132,7 +133,7 @@ class AutoExpireService extends BaseApplicationComponent
 
 			if (!$ruleRecord)
 			{
-				throw new Exception(Craft::t('No expiration rule exists with the ID “{id}”.', array('id' => $ruleId)));
+				throw new Exception(Craft::t('No rule exists with the ID “{id}”.', array('id' => $ruleId)));
 			}
 		}
 		else

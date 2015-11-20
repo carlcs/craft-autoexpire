@@ -19,6 +19,7 @@ class AutoExpireController extends BaseController
 		$rule->id             = craft()->request->getPost('id');
                 $rule->name           = craft()->request->getPost('name');
                 $rule->section        = craft()->request->getPost('section');
+                $rule->field          = craft()->request->getPost('field');
                 $rule->expirationDate = craft()->request->getPost('expirationDate');
                 $rule->allowOverwrite = craft()->request->getPost('allowOverwrite');
 
@@ -32,12 +33,12 @@ class AutoExpireController extends BaseController
 		// Did it save?
 		if (craft()->autoExpire->saveRule($rule))
 		{
-			craft()->userSession->setNotice(Craft::t('Expiration rule saved.'));
+			craft()->userSession->setNotice(Craft::t('Rule saved.'));
 			$this->redirectToPostedUrl();
 		}
 		else
 		{
-			craft()->userSession->setError(Craft::t('Couldn’t save expiration rule.'));
+			craft()->userSession->setError(Craft::t('Couldn’t save rule.'));
 		}
 
 		// Send the widget back to the template

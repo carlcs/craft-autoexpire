@@ -9,9 +9,14 @@
 {% set rules = craft.autoexpire.getRules %}
 {% set sortable = (rules|length > 1) %}
 
+{% set fieldNames = {
+    postDate: 'Post Date'|t,
+    expiryDate: 'Expiry Date'|t,
+} %}
+
 {% set content %}
     <p id="norules"{% if rules|length %} class="hidden"{% endif %}>
-		{{ 'No expiration rules exist yet.'|t }}
+		{{ 'No rules exist yet.'|t }}
 	</p>
 
     {% if rules|length %}
@@ -21,7 +26,8 @@
     				<th scope="col">{{ 'Name'|t }}</th>
     				<th scope="col">{{ 'Section'|t }}</th>
     	            <th scope="col">{{ 'Entry Type'|t }}</th>
-    	            <th scope="col">{{ 'Expiration Date'|t }}</th>
+                    <th scope="col">{{ 'Field'|t }}</th>
+    	            <th scope="col">{{ 'Date/Time'|t }}</th>
     	            <th scope="col">{{ 'Allow user changes'|t }}</th>
     				<th colspan="2"></th>
     			</tr>
@@ -35,6 +41,7 @@
     	                <th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('settings/plugins/autoexpire/' ~ rule.id) }}">{{ rule.name ? rule.name : 'Unknown'|t }}</a></th>
                         <td>{% if section %}{{ section.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
     	                <td>{% if entryType %}{{ entryType.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
+                        <td>{{ fieldNames[rule.field] }}</td>
     	                <td><code>{{ rule.expirationDate }}</code></td>
     	                <td><span class="status {{ rule.allowOverwrite ? 'enabled' : 'disabled' }}"></span> {{ rule.allowOverwrite ? 'Enabled'|t : 'Disabled'|t }}</td>
                         {% if sortable %}<td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>{% endif %}
@@ -46,7 +53,7 @@
     {% endif %}
 
 	<div class="buttons">
-		<a href="{{ url('settings/plugins/autoexpire/new') }}" class="btn submit add icon">{{ 'New Expiration Rule'|t }}</a>
+		<a href="{{ url('settings/plugins/autoexpire/new') }}" class="btn submit add icon">{{ 'New Rule'|t }}</a>
 	</div>
 {% endset %}
 

@@ -1,9 +1,6 @@
 <?php
 namespace Craft;
 
-/**
- * Auto Expire plugin
- */
 class AutoExpirePlugin extends BasePlugin
 {
         function getName()
@@ -13,12 +10,12 @@ class AutoExpirePlugin extends BasePlugin
 
         function getVersion()
         {
-                return '1.0.1';
+                return '1.1';
         }
 
         function getSchemaVersion()
 	{
-		return null;
+		return '1.1';
 	}
 
         function getDeveloper()
@@ -64,18 +61,16 @@ class AutoExpirePlugin extends BasePlugin
                         $entry = $event->params['entry'];
                         $rules = craft()->autoExpire->getRules();
 
-                        $rules = array_reverse($rules);
+                        // Used to break the recursive call of `saveEntry`.
+                        if (!isset($executedRules)) static $executedRules = array();
 
                         foreach($rules as $rule)
                         {
-                                // Used to break the recursive call of `saveEntry`.
-                                static $recursionLevel = 0;
-
                                 if (($entry->section->id == $rule->section) && ($entry->type->id == $rule->entryType))
                                 {
-                                        if (($recursionLevel == 0) && (($entry->expiryDate === null) || (!$rule->allowOverwrite)))
+                                        if (!in_array($rule['id'], $executedRules) && (($entry->expiryDate === null) || (!$rule->allowOverwrite)))
                                         {
-                                                $recursionLevel++;
+                                                $executedRules[] = $rule['id'];
 
                                                 $newExpiryDate = craft()->templates->renderObjectTemplate($rule->expirationDate, $entry);
                                                 $newExpiryDate = DateTime::createFromString($newExpiryDate);
@@ -87,13 +82,17 @@ class AutoExpirePlugin extends BasePlugin
                                                         break;
                                                 }
 
-                                                $entry->expiryDate = $newExpiryDate;
+                                                $entry[$rule['field']] = $newExpiryDate;
 
                                                 $success = craft()->entries->saveEntry($entry);
 
                                                 if (!$success)
                                                 {
                                                         Craft::log('(Auto Expire) Couldn’t save the entry “'.$entry->title.'”', LogLevel::Error);
+                                                }
+                                                else
+                                                {
+                                                        Craft::log('(Auto Expire) Rule “'.$rule['name'].'” applied to the entry “'.$entry->title.'”.');
                                                 }
                                         }
                                 }
