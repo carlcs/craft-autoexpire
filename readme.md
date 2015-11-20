@@ -1,5 +1,3 @@
-Set entry dates automatically on every entry save.
-
 # Auto Expire plugin for Craft
 
 This plugin allows to set entry post dates or expiration dates automatically on every entry save computed from predefined Twig code.
