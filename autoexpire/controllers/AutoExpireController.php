@@ -4,19 +4,19 @@ namespace Craft;
 class AutoExpireController extends BaseController
 {
         // Public Methods
-	// =========================================================================
+        // =========================================================================
 
         /**
-	 * Saves a new or existing rule.
-	 *
-	 * @return null
-	 */
+         * Saves a new or existing rule.
+         *
+         * @return null
+         */
         public function actionSaveRule()
-	{
-		$this->requirePostRequest();
+        {
+                $this->requirePostRequest();
 
-		$rule = new AutoExpire_RuleModel();
-		$rule->id             = craft()->request->getPost('id');
+                $rule = new AutoExpire_RuleModel();
+                $rule->id             = craft()->request->getPost('id');
                 $rule->name           = craft()->request->getPost('name');
                 $rule->section        = craft()->request->getPost('section');
                 $rule->field          = craft()->request->getPost('field');
@@ -30,55 +30,55 @@ class AutoExpireController extends BaseController
                         $rule->entryType = $sections[$rule->section]['entryType'];
                 }
 
-		// Did it save?
-		if (craft()->autoExpire->saveRule($rule))
-		{
-			craft()->userSession->setNotice(Craft::t('Rule saved.'));
-			$this->redirectToPostedUrl();
-		}
-		else
-		{
-			craft()->userSession->setError(Craft::t('Couldn’t save rule.'));
-		}
+                // Did it save?
+                if (craft()->autoExpire->saveRule($rule))
+                {
+                        craft()->userSession->setNotice(Craft::t('Rule saved.'));
+                        $this->redirectToPostedUrl();
+                }
+                else
+                {
+                        craft()->userSession->setError(Craft::t('Couldn’t save rule.'));
+                }
 
-		// Send the widget back to the template
-		craft()->urlManager->setRouteVariables(array(
-			'rule' => $rule
-		));
-	}
+                // Send the widget back to the template
+                craft()->urlManager->setRouteVariables(array(
+                        'rule' => $rule
+                ));
+        }
 
         /**
-	 * Deletes a rule.
-	 *
-	 * @return null
-	 */
+         * Deletes a rule.
+         *
+         * @return null
+         */
         public function actionDeleteRule()
-	{
-		$this->requirePostRequest();
-		$this->requireAjaxRequest();
+        {
+                $this->requirePostRequest();
+                $this->requireAjaxRequest();
 
-		$ruleId = JsonHelper::decode(craft()->request->getRequiredPost('id'));
-		craft()->autoExpire->deleteRuleById($ruleId);
+                $ruleId = JsonHelper::decode(craft()->request->getRequiredPost('id'));
+                craft()->autoExpire->deleteRuleById($ruleId);
 
-		$this->returnJson(array('success' => true));
-	}
+                $this->returnJson(array('success' => true));
+        }
 
         /**
-	 * Updates the rules sort order.
-	 *
-	 * @return null
-	 */
+         * Updates the rules sort order.
+         *
+         * @return null
+         */
         public function actionReorderRules()
-	{
-		$this->requirePostRequest();
-		$this->requireAjaxRequest();
+        {
+                $this->requirePostRequest();
+                $this->requireAjaxRequest();
 
-		$ruleIds = JsonHelper::decode(craft()->request->getRequiredPost('ids'));
+                $ruleIds = JsonHelper::decode(craft()->request->getRequiredPost('ids'));
 
-		craft()->autoExpire->reorderRules($ruleIds);
+                craft()->autoExpire->reorderRules($ruleIds);
 
-		$this->returnJson(array('success' => true));
-	}
+                $this->returnJson(array('success' => true));
+        }
 
 
 }

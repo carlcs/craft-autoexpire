@@ -14,9 +14,9 @@ class AutoExpirePlugin extends BasePlugin
         }
 
         function getSchemaVersion()
-	{
-		return '1.1';
-	}
+        {
+                return '1.1';
+        }
 
         function getDeveloper()
         {

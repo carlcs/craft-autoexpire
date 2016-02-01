@@ -16,45 +16,45 @@
 
 {% set content %}
     <p id="norules"{% if rules|length %} class="hidden"{% endif %}>
-		{{ 'No rules exist yet.'|t }}
-	</p>
+        {{ 'No rules exist yet.'|t }}
+    </p>
 
     {% if rules|length %}
-    	<table id="rules" class="data fullwidth collapsible">
-    		<thead>
-    			<tr>
-    				<th scope="col">{{ 'Name'|t }}</th>
-    				<th scope="col">{{ 'Section'|t }}</th>
-    	            <th scope="col">{{ 'Entry Type'|t }}</th>
+        <table id="rules" class="data fullwidth collapsible">
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'Name'|t }}</th>
+                    <th scope="col">{{ 'Section'|t }}</th>
+                    <th scope="col">{{ 'Entry Type'|t }}</th>
                     <th scope="col">{{ 'Field'|t }}</th>
-    	            <th scope="col">{{ 'Date/Time'|t }}</th>
-    	            <th scope="col">{{ 'Allow user changes'|t }}</th>
-    				<th colspan="2"></th>
-    			</tr>
-    		</thead>
-    		<tbody>
-    			{% for rule in rules %}
-    	            {% set section = craft.sections.getSectionById(rule.section) %}
-    	            {% set entryType = section.getEntryTypes('id')[rule.entryType] is defined ? section.getEntryTypes('id')[rule.entryType] : null %}
+                    <th scope="col">{{ 'Date/Time'|t }}</th>
+                    <th scope="col">{{ 'Allow user changes'|t }}</th>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rule in rules %}
+                    {% set section = craft.sections.getSectionById(rule.section) %}
+                    {% set entryType = section.getEntryTypes('id')[rule.entryType] is defined ? section.getEntryTypes('id')[rule.entryType] : null %}
 
-    				<tr data-id="{{ rule.id }}" data-name="{{ rule.name }}">
-    	                <th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('settings/plugins/autoexpire/' ~ rule.id) }}">{{ rule.name ? rule.name : 'Unknown'|t }}</a></th>
+                    <tr data-id="{{ rule.id }}" data-name="{{ rule.name }}">
+                        <th scope="row" data-title="{{ 'Name'|t }}"><a href="{{ url('settings/plugins/autoexpire/' ~ rule.id) }}">{{ rule.name ? rule.name : 'Unknown'|t }}</a></th>
                         <td>{% if section %}{{ section.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
-    	                <td>{% if entryType %}{{ entryType.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
+                        <td>{% if entryType %}{{ entryType.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
                         <td>{{ fieldNames[rule.field] }}</td>
-    	                <td><code>{{ rule.expirationDate }}</code></td>
-    	                <td><span class="status {{ rule.allowOverwrite ? 'enabled' : 'disabled' }}"></span> {{ rule.allowOverwrite ? 'Enabled'|t : 'Disabled'|t }}</td>
+                        <td><code>{{ rule.expirationDate }}</code></td>
+                        <td><span class="status {{ rule.allowOverwrite ? 'enabled' : 'disabled' }}"></span> {{ rule.allowOverwrite ? 'Enabled'|t : 'Disabled'|t }}</td>
                         {% if sortable %}<td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>{% endif %}
-    	                <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}"></a></td>
-    	            </tr>
-    	        {% endfor %}
-    		</tbody>
-    	</table>
+                        <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}"></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 
-	<div class="buttons">
-		<a href="{{ url('settings/plugins/autoexpire/new') }}" class="btn submit add icon">{{ 'New Rule'|t }}</a>
-	</div>
+    <div class="buttons">
+        <a href="{{ url('settings/plugins/autoexpire/new') }}" class="btn submit add icon">{{ 'New Rule'|t }}</a>
+    </div>
 {% endset %}
 
 {% set js %}
