@@ -1,4 +1,4 @@
-# Auto Expire plugin for Craft
+# Auto Expire plugin for Craft CMS
 
 This plugin allows to set entry post dates or expiration dates automatically on every entry save computed from predefined Twig code.
 
