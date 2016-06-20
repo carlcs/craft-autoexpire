@@ -51,28 +51,23 @@
                 errors: rule is defined ? rule.errors('name') : null,
             }) }}
 
-            {% if CraftEdition >= CraftClient %}
-                {% set sectionOptions = [] %}
-                {% for section in sections %}
-                    {% set sectionOptions = sectionOptions|merge([{ label: section.name|t, value: section.id }]) %}
-                {% endfor %}
+            {% set sectionOptions = [] %}
+            {% for section in sections %}
+                {% set sectionOptions = sectionOptions|merge([{ label: section.name|t, value: section.id }]) %}
+            {% endfor %}
 
-                {{ forms.selectField({
-                    label: 'Section'|t,
-                    instructions: 'Which section do you want to apply this rule to?'|t,
-                    id: 'section',
-                    name: 'section',
-                    options: sectionOptions,
-                    value: rule is defined ? rule.section : null,
-                    toggle: true,
-                    targetPrefix: 'section'
-                }) }}
+            {{ forms.selectField({
+                label: 'Section'|t,
+                instructions: 'Which section do you want to apply this rule to?'|t,
+                id: 'section',
+                name: 'section',
+                options: sectionOptions,
+                value: rule is defined ? rule.section : null,
+                toggle: true,
+                targetPrefix: 'section'
+            }) }}
 
-                {% set selectedSectionId = rule is defined ? rule.section : null %}
-            {% else %}
-                {% set selectedSectionId = sections[0].id %}
-                <input type="hidden" name="section" value="{{ selectedSectionId }}">
-            {% endif %}
+            {% set selectedSectionId = rule is defined ? rule.section : null %}
 
             {% for section in sections %}
                 {% set showSection = ((not selectedSectionId and loop.first) or selectedSectionId == section.id) %}
