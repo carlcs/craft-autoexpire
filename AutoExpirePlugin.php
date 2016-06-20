@@ -25,7 +25,7 @@ class AutoExpirePlugin extends BasePlugin
 
     public function getDeveloperUrl()
     {
-        return 'https://github.com/carlcs/craft-autoexpire';
+        return 'https://github.com/carlcs';
     }
 
     public function getDocumentationUrl()
@@ -52,30 +52,50 @@ class AutoExpirePlugin extends BasePlugin
         );
     }
 
+    // Properties
+    // =========================================================================
+
+    /**
+     * Used to keep track of elements and rules we already re-saved with the
+     * new date attributes set.
+     *
+     * @var array
+     */
+    public $_handledRules = array();
+
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * Initializes the plugin
+     */
     public function init()
     {
-        parent::init();
+        craft()->on('entries.onSaveEntry', array($this, 'handleEntrySave'));
+    }
 
-        craft()->on('entries.onSaveEntry', function (Event $event) {
-            $entry = $event->params['entry'];
-            $rules = craft()->autoExpire->getRules();
+    /**
+     * Re-saves an entry on save with the new date attributes set from the rules.
+     *
+     * @param Event $event
+     */
+    public function handleEntrySave(Event $event)
+    {
+        $entry = $event->params['entry'];
+        $rules = craft()->autoExpire->getRules();
 
-            // Used to break the recursive call of `saveEntry`.
-            if (!isset($executedRules)) {
-                static $executedRules = array();
-            }
+        foreach ($rules as $rule) {
+            if (($entry->section->id == $rule->section) && ($entry->type->id == $rule->entryType)) {
 
-            foreach ($rules as $rule) {
-                if (($entry->section->id == $rule->section) && ($entry->type->id == $rule->entryType)) {
-                    if (!in_array($rule['id'], $executedRules) && (($entry->expiryDate === null) || (!$rule->allowOverwrite))) {
-                        $executedRules[] = $rule['id'];
+                if (!in_array($rule['id'], $this->_handledRules)) {
+                    $this->_handledRules[] = $rule['id'];
 
+                    if (($entry->expiryDate === null) || (!$rule->allowOverwrite)) {
                         $newExpiryDate = craft()->templates->renderObjectTemplate($rule->expirationDate, $entry);
                         $newExpiryDate = DateTime::createFromString($newExpiryDate);
 
                         if (!$newExpiryDate instanceof \DateTime) {
                             Craft::log('(Auto Expire) Couldn’t create a date for “'.$rule->name.'”', LogLevel::Error);
-
                             break;
                         }
 
@@ -91,6 +111,6 @@ class AutoExpirePlugin extends BasePlugin
                     }
                 }
             }
-        });
+        }
     }
 }

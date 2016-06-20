@@ -3,11 +3,27 @@ namespace Craft;
 
 class AutoExpire_RuleRecord extends BaseRecord
 {
+    // Public Methods
+    // =========================================================================
+
+    /**
+     * Returns the name of the associated database table.
+     *
+     * @return string
+     */
     public function getTableName()
     {
         return 'autoexpire';
     }
 
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * Defines this model's attributes.
+     *
+     * @return array
+     */
     protected function defineAttributes()
     {
         return array(

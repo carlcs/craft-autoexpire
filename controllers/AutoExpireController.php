@@ -37,7 +37,7 @@ class AutoExpireController extends BaseController
             craft()->userSession->setError(Craft::t('Couldn’t save rule.'));
         }
 
-        // Send the widget back to the template
+        // Send the rule back to the template
         craft()->urlManager->setRouteVariables(array(
             'rule' => $rule
         ));

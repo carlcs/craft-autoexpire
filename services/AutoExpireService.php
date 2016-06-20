@@ -26,6 +26,7 @@ class AutoExpireService extends BaseApplicationComponent
      * Returns a rule by its ID.
      *
      * @param int $ruleId
+     *
      * @return RuleModel
      */
     public function getRuleById($ruleId)
@@ -41,6 +42,7 @@ class AutoExpireService extends BaseApplicationComponent
      * Saves a rule.
      *
      * @param RuleModel $rule
+     *
      * @return bool
      */
     public function saveRule(AutoExpire_RuleModel $rule)
@@ -85,6 +87,7 @@ class AutoExpireService extends BaseApplicationComponent
      * Deletes a rule.
      *
      * @param int $ruleId
+     *
      * @return bool
      */
     public function deleteRuleById($ruleId)
@@ -97,6 +100,7 @@ class AutoExpireService extends BaseApplicationComponent
      * Reorders rules.
      *
      * @param array $ruleIds
+     *
      * @return null
      */
     public function reorderRules($ruleIds)
@@ -115,6 +119,7 @@ class AutoExpireService extends BaseApplicationComponent
      * Returns a rule's record.
      *
      * @param int $ruleId
+     *
      * @return RuleRecord
      */
     private function _getRuleRecordById($ruleId = null)

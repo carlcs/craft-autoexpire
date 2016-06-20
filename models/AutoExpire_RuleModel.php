@@ -3,6 +3,14 @@ namespace Craft;
 
 class AutoExpire_RuleModel extends BaseModel
 {
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * Defines this model's attributes.
+     *
+     * @return array
+     */
     protected function defineAttributes()
     {
         return array(

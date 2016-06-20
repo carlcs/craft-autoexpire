@@ -20,6 +20,7 @@ class AutoExpireVariable
      * Returns a rule by its ID.
      *
      * @param int $id
+     *
      * @return RuleModel|null
      */
     public function getRuleById($id)
