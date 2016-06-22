@@ -159,25 +159,33 @@ class AutoExpirePlugin extends BasePlugin
         $fieldIsEmpty = $this->fieldIsEmpty($entry, $fieldHandle);
 
         if ($fieldIsEmpty || !$rule->allowOverwrite) {
-            $newExpiryDate = craft()->templates->renderObjectTemplate($rule->dateTemplate, $entry);
-            $newExpiryDate = DateTime::createFromString($newExpiryDate);
+            try {
+                $newDateString = craft()->templates->renderObjectTemplate($rule->dateTemplate, $entry);
+            } catch (\Exception $e) {
+                AutoExpirePlugin::log('Couldn’t render template for entry with id “'.$entry->id .
+                    '” and Auto Expire rule “'.$rule->name.'” ('.$e->getMessage().').', LogLevel::Error);
+                return null;
+            }
 
-            if (!$newExpiryDate instanceof \DateTime) {
-                BusinessLogicPlugin::log('(Auto Expire) Couldn’t create a date for “'.$rule->name.'”', LogLevel::Error);
+            $newDate = DateTime::createFromString($newDateString);
+
+            if (!$newDate instanceof \DateTime) {
+                AutoExpirePlugin::log('Couldn’t create date from string “'.$newDateString.'” for entry with id “' .
+                    $entry->id.'” and Auto Expire rule “'.$rule->name.'”.', LogLevel::Error);
+                return null;
             }
 
             if (in_array($fieldHandle, array('postDate', 'expiryDate'))) {
-                $entry->{$fieldHandle} = $newExpiryDate;
+                $entry->{$fieldHandle} = $newDate;
             } else {
-                $entry->setContentFromPost(array($fieldHandle => $newExpiryDate));
+                $entry->setContentFromPost(array($fieldHandle => $newDate));
             }
 
             $success = craft()->entries->saveEntry($entry);
 
             if (!$success) {
-                BusinessLogicPlugin::log('(Auto Expire) Couldn’t save the entry “'.$entry->title.'”', LogLevel::Error);
-            } else {
-                BusinessLogicPlugin::log('(Auto Expire) Rule “'.$rule['name'].'” applied to the entry “'.$entry->title.'”.');
+                AutoExpirePlugin::log('Couldn’t save entry with id “'.$entry->id.'” and Auto Expire rule “' .
+                    $rule->name.'”.', LogLevel::Error);
             }
         }
     }
