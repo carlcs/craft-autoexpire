@@ -134,7 +134,7 @@ class AutoExpirePlugin extends BasePlugin
     public function applyRules($entry)
     {
         foreach (craft()->autoExpire->getRules() as $rule) {
-            if (($entry->sectionId == $rule->section) && ($entry->getType()->id == $rule->entryType)) {
+            if (($entry->sectionId == $rule->sectionId) && ($entry->getType()->id == $rule->entryTypeId)) {
                 $ruleName = $entry->id.'::'.$rule->id;
 
                 // Did we already re-save the entry for this rule? Necessary because of the recursive
@@ -156,11 +156,11 @@ class AutoExpirePlugin extends BasePlugin
      */
     public function applyRule($entry, $rule)
     {
-        $fieldHandle = $rule['field'];
+        $fieldHandle = $rule['fieldHandle'];
         $fieldIsEmpty = $this->fieldIsEmpty($entry, $fieldHandle);
 
         if ($fieldIsEmpty || !$rule->allowOverwrite) {
-            $newExpiryDate = craft()->templates->renderObjectTemplate($rule->expirationDate, $entry);
+            $newExpiryDate = craft()->templates->renderObjectTemplate($rule->dateTemplate, $entry);
             $newExpiryDate = DateTime::createFromString($newExpiryDate);
 
             if (!$newExpiryDate instanceof \DateTime) {

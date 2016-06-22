@@ -54,16 +54,16 @@
             {{ forms.selectField({
                 label: 'Section'|t,
                 instructions: 'Which section do you want to apply this rule to?'|t,
-                id: 'section',
-                name: 'section',
+                id: 'sectionId',
+                name: 'sectionId',
                 options: sectionOptions,
-                value: rule is defined ? rule.section : null,
+                value: rule is defined ? rule.sectionId : null,
                 toggle: true,
                 targetPrefix: 'section'
             }) }}
 
-            {% set selectedSectionId = rule is defined ? rule.section : null %}
-            {% set selectedEntryTypeId = rule is defined ? rule.entryType : null %}
+            {% set selectedSectionId = rule is defined ? rule.sectionId : null %}
+            {% set selectedEntryTypeId = rule is defined ? rule.entryTypeId : null %}
 
             {% for section in sections %}
                 {% set showSection = ((not selectedSectionId and loop.first) or selectedSectionId == section.id) %}
@@ -78,9 +78,9 @@
                         label: 'Entry Type'|t,
                         instructions: 'Which entry type do you want to apply this rule to?'|t,
                         id: 'entryType',
-                        name: 'sections['~section.id~'][entryType]',
+                        name: 'sections['~section.id~'][entryTypeId]',
                         options: entryTypeOptions,
-                        value: rule is defined ? rule.entryType : null,
+                        value: rule is defined ? rule.entryTypeId : null,
                         toggle: true,
                         targetPrefix: 'section'~section.id~'-type'
                     }) }}
@@ -109,9 +109,9 @@
                                 label: 'Field'|t,
                                 instructions: 'Which field do you want to apply this rule to?'|t,
                                 id: 'field',
-                                name: 'sections['~section.id~']['~entryType.id~'][field]',
+                                name: 'sections['~section.id~']['~entryType.id~'][fieldHandle]',
                                 options: dateFieldOptions,
-                                value: rule is defined ? rule.field : null,
+                                value: rule is defined ? rule.fieldHandle : null,
                             }) }}
                         </div>
                     {% endfor %}
@@ -123,10 +123,10 @@
                 instructions: 'The date which is set automatically on entry save. You can include tags that output entry properties, such as {ex}.'|t({ex: '<code>{postDate|date_modify(\'+7 days\')}</code>'}),
                 required: true,
                 class: 'code',
-                id: 'expirationDate',
-                name: 'expirationDate',
-                value: rule is defined ? rule.expirationDate : null,
-                errors: rule is defined ? rule.errors('expirationDate') : null,
+                id: 'dateTemplate',
+                name: 'dateTemplate',
+                value: rule is defined ? rule.dateTemplate : null,
+                errors: rule is defined ? rule.errors('dateTemplate') : null,
             }) }}
 
             {{ forms.checkboxField({

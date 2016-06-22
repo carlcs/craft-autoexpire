@@ -16,10 +16,10 @@ class AutoExpire_RuleModel extends BaseModel
         return array(
             'id'             => AttributeType::Number,
             'name'           => AttributeType::String,
-            'section'        => AttributeType::Number,
-            'entryType'      => AttributeType::Number,
-            'field'          => AttributeType::String,
-            'expirationDate' => AttributeType::String,
+            'sectionId'      => AttributeType::Number,
+            'entryTypeId'    => AttributeType::Number,
+            'fieldHandle'    => AttributeType::String,
+            'dateTemplate'   => AttributeType::String,
             'allowOverwrite' => AttributeType::Bool,
         );
     }

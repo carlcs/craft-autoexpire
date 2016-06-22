@@ -34,13 +34,13 @@
             </thead>
             <tbody>
                 {% for rule in rules %}
-                    {% set section = craft.sections.getSectionById(rule.section) %}
-                    {% set entryType = section.getEntryTypes('id')[rule.entryType] is defined ? section.getEntryTypes('id')[rule.entryType] : null %}
+                    {% set section = craft.sections.getSectionById(rule.sectionId) %}
+                    {% set entryType = section.getEntryTypes('id')[rule.entryTypeId] is defined ? section.getEntryTypes('id')[rule.entryTypeId] : null %}
 
-                    {% if rule.field in dateAttributes|keys %}
-                        {% set fieldName = dateAttributes[rule.field] %}
+                    {% if rule.fieldHandle in dateAttributes|keys %}
+                        {% set fieldName = dateAttributes[rule.fieldHandle] %}
                     {% else %}
-                        {% set field = craft.fields.getFieldByHandle(rule.field) %}
+                        {% set field = craft.fields.getFieldByHandle(rule.fieldHandle) %}
                         {% set fieldName = field.name ?: 'Unknown' %}
                     {% endif %}
 
@@ -49,7 +49,7 @@
                         <td>{% if section %}{{ section.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
                         <td>{% if entryType %}{{ entryType.name }}{% else %}<span class="error">{{ 'Unknown'|t }}</span>{% endif %}</td>
                         <td>{{ fieldName|t }}</td>
-                        <td><code>{{ rule.expirationDate }}</code></td>
+                        <td><code>{{ rule.dateTemplate }}</code></td>
                         <td><span class="status {{ rule.allowOverwrite ? 'enabled' : 'disabled' }}"></span> {{ rule.allowOverwrite ? 'Enabled'|t : 'Disabled'|t }}</td>
                         {% if sortable %}<td class="thin"><a class="move icon" title="{{ 'Reorder'|t }}" role="button"></a></td>{% endif %}
                         <td class="thin"><a class="delete icon" title="{{ 'Delete'|t }}"></a></td>

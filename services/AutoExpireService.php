@@ -50,10 +50,10 @@ class AutoExpireService extends BaseApplicationComponent
         $ruleRecord = $this->_getRuleRecordById($rule->id);
 
         $ruleRecord->name           = $rule->name;
-        $ruleRecord->section        = $rule->section;
-        $ruleRecord->entryType      = $rule->entryType;
-        $ruleRecord->field          = $rule->field;
-        $ruleRecord->expirationDate = $rule->expirationDate;
+        $ruleRecord->sectionId      = $rule->sectionId;
+        $ruleRecord->entryTypeId    = $rule->entryTypeId;
+        $ruleRecord->fieldHandle    = $rule->fieldHandle;
+        $ruleRecord->dateTemplate   = $rule->dateTemplate;
         $ruleRecord->allowOverwrite = $rule->allowOverwrite;
 
         $recordValidates = $ruleRecord->validate();
