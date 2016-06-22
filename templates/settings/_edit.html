@@ -23,11 +23,6 @@
     {% endif %}
 {% endfor %}
 
-{% set dateFieldOptions = [
-    { label: 'Post Date'|t, value: 'postDate' },
-    { label: 'Expiry Date'|t, value: 'expiryDate' }
-] %}
-
 {% set content %}
     <div {% if sections|length %} class="hidden"{% endif %}>
         <p>{{ 'No sections are available.'|t }}</p>
@@ -68,6 +63,7 @@
             }) }}
 
             {% set selectedSectionId = rule is defined ? rule.section : null %}
+            {% set selectedEntryTypeId = rule is defined ? rule.entryType : null %}
 
             {% for section in sections %}
                 {% set showSection = ((not selectedSectionId and loop.first) or selectedSectionId == section.id) %}
@@ -78,32 +74,49 @@
                         {% set entryTypeOptions = entryTypeOptions|merge([{ label: entryType.name|t, value: entryType.id }]) %}
                     {% endfor %}
 
-                    {% if entryTypeOptions|length == 1 %}
-                        <input type="hidden" name="sections[{{ section.id }}][entryType]" value="{{ entryTypeOptions[0]['value'] }}" />
-                    {% else %}
-                        {{ forms.selectField({
-                            label: 'Entry Type'|t,
-                            instructions: 'Which entry type do you want to apply this rule to?'|t,
-                            id: 'entryType',
-                            name: 'sections['~section.id~'][entryType]',
-                            options: entryTypeOptions,
-                            value: rule is defined ? rule.entryType : null,
-                            toggle: true,
-                            targetPrefix: 'section'~section.id~'-type'
-                        }) }}
-                    {% endif %}
+                    {{ forms.selectField({
+                        label: 'Entry Type'|t,
+                        instructions: 'Which entry type do you want to apply this rule to?'|t,
+                        id: 'entryType',
+                        name: 'sections['~section.id~'][entryType]',
+                        options: entryTypeOptions,
+                        value: rule is defined ? rule.entryType : null,
+                        toggle: true,
+                        targetPrefix: 'section'~section.id~'-type'
+                    }) }}
 
+                    {% for entryType in section.getEntryTypes() %}
+                        {% set dateFieldOptions = [
+                            { label: 'Post Date'|t, value: 'postDate' },
+                            { label: 'Expiry Date'|t, value: 'expiryDate' }
+                        ] %}
+
+                        {% set fieldLayout = craft.fields.getLayoutById(entryType.fieldLayoutId) %}
+
+                        {% for fieldLayoutField in fieldLayout.getFields() %}
+                            {% set field = fieldLayoutField.field %}
+                            {% set fieldType = field.getFieldType() %}
+
+                            {% if fieldType.getClassHandle() == 'Date' %}
+                                {% set dateFieldOptions = dateFieldOptions|merge([{ label: field.name|t, value: field.handle }]) %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% set showEntryType = loop.first or (selectedEntryTypeId == entryType.id) %}
+
+                        <div id="section{{ section.id }}-type{{ entryType.id }}"{% if not showEntryType %} class="hidden"{% endif %}>
+                            {{ forms.selectField({
+                                label: 'Field'|t,
+                                instructions: 'Which field do you want to apply this rule to?'|t,
+                                id: 'field',
+                                name: 'sections['~section.id~']['~entryType.id~'][field]',
+                                options: dateFieldOptions,
+                                value: rule is defined ? rule.field : null,
+                            }) }}
+                        </div>
+                    {% endfor %}
                 </div>
             {% endfor %}
-
-            {{ forms.selectField({
-                label: 'Field'|t,
-                instructions: 'Which field do you want to apply this rule to?'|t,
-                id: 'field',
-                name: 'field',
-                options: dateFieldOptions,
-                value: rule is defined ? rule.field : null,
-            }) }}
 
             {{ forms.textField({
                 label: 'Date/Time'|t,

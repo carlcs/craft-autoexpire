@@ -19,14 +19,15 @@ class AutoExpireController extends BaseController
         $rule->id             = craft()->request->getPost('id');
         $rule->name           = craft()->request->getPost('name');
         $rule->section        = craft()->request->getPost('section');
-        $rule->field          = craft()->request->getPost('field');
         $rule->expirationDate = craft()->request->getPost('expirationDate');
         $rule->allowOverwrite = craft()->request->getPost('allowOverwrite');
 
-        // Extract the entry type from sections array
+        // Extract the entry type and the field from sections array
         $sections = craft()->request->getPost('sections');
+
         if (isset($sections[$rule->section])) {
             $rule->entryType = $sections[$rule->section]['entryType'];
+            $rule->field = $sections[$rule->section][$rule->entryType]['field'];
         }
 
         // Did it save?

@@ -56,8 +56,7 @@ class AutoExpirePlugin extends BasePlugin
     // =========================================================================
 
     /**
-     * Used to keep track of entries and rules we already re-saved with the
-     * new date attributes set.
+     * Used to keep track of entries and rules we already re-saved.
      *
      * @var array
      */
@@ -130,7 +129,7 @@ class AutoExpirePlugin extends BasePlugin
     /**
      * Applies the rules which relate to a given entry.
      *
-     * @param Event $event
+     * @param EntryModel $entry
      */
     public function applyRules($entry)
     {
@@ -150,13 +149,17 @@ class AutoExpirePlugin extends BasePlugin
     }
 
     /**
-     * Re-saves an entry with the date attribute set from a rule.
+     * Re-saves an entry with the date from a rule.
      *
-     * @param Event $event
+     * @param EntryModel $entry
+     * @param AutoExpire_RuleModel $rule
      */
     public function applyRule($entry, $rule)
     {
-        if (($entry->expiryDate === null) || (!$rule->allowOverwrite)) {
+        $fieldHandle = $rule['field'];
+        $fieldIsEmpty = $this->fieldIsEmpty($entry, $fieldHandle);
+
+        if ($fieldIsEmpty || !$rule->allowOverwrite) {
             $newExpiryDate = craft()->templates->renderObjectTemplate($rule->expirationDate, $entry);
             $newExpiryDate = DateTime::createFromString($newExpiryDate);
 
@@ -164,7 +167,11 @@ class AutoExpirePlugin extends BasePlugin
                 BusinessLogicPlugin::log('(Auto Expire) Couldn’t create a date for “'.$rule->name.'”', LogLevel::Error);
             }
 
-            $entry[$rule['field']] = $newExpiryDate;
+            if (in_array($fieldHandle, array('postDate', 'expiryDate'))) {
+                $entry->{$fieldHandle} = $newExpiryDate;
+            } else {
+                $entry->setContentFromPost(array($fieldHandle => $newExpiryDate));
+            }
 
             $success = craft()->entries->saveEntry($entry);
 
@@ -174,5 +181,22 @@ class AutoExpirePlugin extends BasePlugin
                 BusinessLogicPlugin::log('(Auto Expire) Rule “'.$rule['name'].'” applied to the entry “'.$entry->title.'”.');
             }
         }
+    }
+
+    /**
+     * Returns whether an entry's date field is empty.
+     *
+     * @param EntryModel $entry
+     * @param string $fieldHandle
+     *
+     * @return bool
+     */
+    protected function fieldIsEmpty($entry, $fieldHandle)
+    {
+        if ($fieldHandle == 'postDate') {
+            return $entry->{$fieldHandle} == DateTimeHelper::currentUTCDateTime();
+        }
+
+        return $entry->{$fieldHandle} === null;
     }
 }
