@@ -79,7 +79,6 @@ class AutoExpirePlugin extends BasePlugin
     {
         craft()->on('entries.onBeforeSaveEntry', array($this, 'handleBeforeEntrySave'));
         craft()->on('entries.onSaveEntry', array($this, 'handleEntrySave'));
-
         craft()->on('elements.onSaveElement', array($this, 'handleElementSave'));
     }
 
