@@ -45,11 +45,11 @@ class AutoExpirePlugin extends BasePlugin
 
     public function registerCpRoutes()
     {
-        return array(
+        return [
             'settings/plugins/autoexpire/index' => 'autoexpire/settings/index',
             'settings/plugins/autoexpire/new' => 'autoexpire/settings/_edit',
             'settings/plugins/autoexpire/(?P<ruleId>\d+)' => 'autoexpire/settings/_edit',
-        );
+        ];
     }
 
     // Properties
@@ -60,21 +60,21 @@ class AutoExpirePlugin extends BasePlugin
      *
      * @var array
      */
-    private $_handledRules = array();
+    private $_handledRules = [];
 
     /**
      * Used to keep track of entries which are handled by entries.onSaveEntry.
      *
      * @var array
      */
-    private $_handledOnEntrySave = array();
+    private $_handledOnEntrySave = [];
 
     /**
      * A list of of EntryModel attributes of type DateTime.
      *
      * @var array
      */
-    private static $_dateAttributes = array('postDate', 'expiryDate');
+    private static $_dateAttributes = ['postDate', 'expiryDate'];
 
     // Public Methods
     // =========================================================================
@@ -84,9 +84,22 @@ class AutoExpirePlugin extends BasePlugin
      */
     public function init()
     {
-        craft()->on('entries.onBeforeSaveEntry', array($this, 'handleBeforeEntrySave'));
-        craft()->on('entries.onSaveEntry', array($this, 'handleEntrySave'));
-        craft()->on('elements.onSaveElement', array($this, 'handleElementSave'));
+        craft()->on('entries.onBeforeSaveEntry', [$this, 'handleBeforeEntrySave']);
+        craft()->on('entries.onSaveEntry', [$this, 'handleEntrySave']);
+        craft()->on('elements.onSaveElement', [$this, 'handleElementSave']);
+    }
+
+    /**
+     * Make sure requirements are met before installation.
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function onBeforeInstall()
+    {
+        if (!defined('PHP_VERSION') || version_compare(PHP_VERSION, '5.4', '<')) {
+            throw new Exception($this->getName().' plugin requires PHP 5.4 or later.');
+        }
     }
 
     /**

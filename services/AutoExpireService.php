@@ -19,7 +19,7 @@ class AutoExpireService extends BaseApplicationComponent
             return AutoExpire_RuleModel::populateModels($ruleRecords);
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -92,7 +92,7 @@ class AutoExpireService extends BaseApplicationComponent
      */
     public function deleteRuleById($ruleId)
     {
-        craft()->db->createCommand()->delete('autoexpire', array('id' => $ruleId));
+        craft()->db->createCommand()->delete('autoexpire', ['id' => $ruleId]);
         return true;
     }
 
@@ -106,8 +106,8 @@ class AutoExpireService extends BaseApplicationComponent
     public function reorderRules($ruleIds)
     {
         foreach ($ruleIds as $order => $ruleId) {
-            $data = array('sortOrder' => $order + 1);
-            $condition = array('id' => $ruleId);
+            $data = ['sortOrder' => $order + 1];
+            $condition = ['id' => $ruleId];
             craft()->db->createCommand()->update('autoexpire', $data, $condition);
         }
     }
@@ -128,7 +128,7 @@ class AutoExpireService extends BaseApplicationComponent
             $ruleRecord = AutoExpire_RuleRecord::model()->findById($ruleId);
 
             if (!$ruleRecord) {
-                throw new Exception(Craft::t('(Auto Expire) No rule exists with the ID “{id}”.', array('id' => $ruleId)));
+                throw new Exception(Craft::t('(Auto Expire) No rule exists with the ID “{id}”.', ['id' => $ruleId]));
             }
         } else {
             $ruleRecord = new AutoExpire_RuleRecord();

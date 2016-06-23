@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
     'No rules exist yet.' => 'Es gibt noch keine Regeln.',
     'Allow user changes' => 'Nutzeränderungen zulassen',
     'New Rule' => 'Neue Regel',
@@ -15,4 +15,4 @@ return array(
     'Rule saved.' => 'Regel gespeichert.',
     'Couldn’t save rule.' => 'Konnte die Regel nicht speichern.',
     'No rule exists with the ID “{id}”.' => 'Es gibt keine Regel mit der ID “{id}”.',
-);
+];

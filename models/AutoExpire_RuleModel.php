@@ -13,7 +13,7 @@ class AutoExpire_RuleModel extends BaseModel
      */
     protected function defineAttributes()
     {
-        return array(
+        return [
             'id'             => AttributeType::Number,
             'name'           => AttributeType::String,
             'sectionId'      => AttributeType::Number,
@@ -21,6 +21,6 @@ class AutoExpire_RuleModel extends BaseModel
             'fieldHandle'    => AttributeType::String,
             'dateTemplate'   => AttributeType::String,
             'allowOverwrite' => AttributeType::Bool,
-        );
+        ];
     }
 }
