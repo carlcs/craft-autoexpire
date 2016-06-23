@@ -43,7 +43,7 @@ That’s why you probably want to use Twig’s `date` filter to explicitly defin
 
   or using another [relative time format][2]:
 
-        { postDate|date_modify('first day of next month 5am')|date('c') }
+      { postDate|date_modify('first day of next month 5am')|date('c') }
 
 - More complex example using a conditional (ternary syntax):
 
