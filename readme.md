@@ -23,7 +23,7 @@ Navigate to the plugin’s settings page and add a new rule to define the condit
 
 ## Configuration
 
-### Expiration Date
+#### Expiration Date
 
 Auto Expire uses the same approach to parse a Twig Template from a field as Craft’s Title Format settings field, please see [Dynamic Entry Titles][1] in the Craft Documentation for more information about the expected syntax.
 
@@ -35,21 +35,29 @@ That’s why you probably want to use Twig’s `date` filter to explicitly defin
 
 - Set to a fixed date:
 
-        2015-05-13 13:00
+    ```twig
+    2015-05-13 13:00
+    ```
 
 - Set a date based on the entry’s Post Date:
 
-        { postDate|date_modify('+7 days')|date('c') }
+    ```twig
+    {{ object.postDate|date_modify('+7 days')|date('c') }}
+    ```
 
   or using another [relative time format][2]:
 
-      { postDate|date_modify('first day of next month 5am')|date('c') }
+  ```twig
+  {{ object.postDate|date_modify('first day of next month 5am')|date('c') }}
+  ```
 
 - More complex example using a conditional (ternary syntax):
 
-        {{ object.myDateTimeField ? object.myDateTimeField|date('c') : object.postDate|date_modify('+7 days')|date('c') }}
+    ```twig
+    {{ object.myDateTimeField ? object.myDateTimeField|date('c') : object.postDate|date_modify('+7 days')|date('c') }}
+    ```
 
-### Allow User Changes
+#### Allow User Changes
 
 Check this field to allow users to overwrite the automatically set date. In this case the plugin will only set the date if the date field is left blank by the user.
 
