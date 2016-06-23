@@ -15,7 +15,8 @@ $ composer require carlcs/craft-autoexpire
 
 ## Usage
 
-- Navigate to the plugin’s settings page (Settings → Auto Expire) and add a new rule to define the conditions for how dates are being set by the plugin.
+Navigate to the plugin’s settings page and add a new rule to define the conditions for how dates are being set by the plugin.
+
 - Select the section and entry type of the entries you want the rule to be applied to.
 - Select the date field you want to apply this rule to.
 - Enter the Twig code which is rendered and set to the date field on entry save. You can include tags that output entry properties.
