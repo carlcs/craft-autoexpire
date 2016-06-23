@@ -1,6 +1,6 @@
 # Auto Expire plugin for Craft CMS
 
-This plugin allows to set an entry’s Expiry Date, Post Date or any custom date field on every entry save. The date value is generated from a Twig template which you define in the plugin settings.
+This plugin allows to set an entry’s Expiry Date, Post Date or any custom date field automatically on entry save. The date value is generated from a Twig template which can be set up in the plugin settings.
 
 ## Installation
 
