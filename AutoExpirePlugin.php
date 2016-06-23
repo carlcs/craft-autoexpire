@@ -38,20 +38,6 @@ class AutoExpirePlugin extends BasePlugin
         return 'https://github.com/carlcs/craft-autoexpire/raw/master/releases.json';
     }
 
-    public function getSettingsUrl()
-    {
-        return 'settings/plugins/autoexpire/index';
-    }
-
-    public function registerCpRoutes()
-    {
-        return [
-            'settings/plugins/autoexpire/index' => 'autoexpire/settings/index',
-            'settings/plugins/autoexpire/new' => 'autoexpire/settings/_edit',
-            'settings/plugins/autoexpire/(?P<ruleId>\d+)' => 'autoexpire/settings/_edit',
-        ];
-    }
-
     // Properties
     // =========================================================================
 
@@ -100,6 +86,30 @@ class AutoExpirePlugin extends BasePlugin
         if (!defined('PHP_VERSION') || version_compare(PHP_VERSION, '5.4', '<')) {
             throw new Exception($this->getName().' plugin requires PHP 5.4 or later.');
         }
+    }
+
+    /**
+     * Returns the URL to the plugin's settings page in the CP.
+     *
+     * @return string
+     */
+    public function getSettingsUrl()
+    {
+        return 'settings/plugins/autoexpire/index';
+    }
+
+    /**
+     * Returns an array of CP routes that should be registered for the plugin.
+     *
+     * @return array
+     */
+    public function registerCpRoutes()
+    {
+        return [
+            'settings/plugins/autoexpire/index' => 'autoexpire/settings/index',
+            'settings/plugins/autoexpire/new' => 'autoexpire/settings/_edit',
+            'settings/plugins/autoexpire/(?P<ruleId>\d+)' => 'autoexpire/settings/_edit',
+        ];
     }
 
     /**
