@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.2.0",
+    "downloadUrl": "https://github.com/carlcs/craft-autoexpire/archive/v1.2.0.zip",
+    "date": "2016-06-23T12:00:00+01:00",
+    "notes": [
+      "[Added] Auto Expire now allows to set custom date fields (in addition to Expiry Date and Post Date).",
+      "[Improved] Errors that might occur when rendering date templates no longer prevent the entry from saving.",
+      "[Improved] Auto Expire now writes logs into its own autoexpire.log file.",
+      "[Improved] The plugin now requires PHP 5.4+.",
+      "[Fixed] Fixed a bug where rules where not applied when `ElementsService::saveElement()` was called directly. For example when a “Resave all elements” task was triggered.",
+    ]
+  },
+  {
     "version": "1.1.1",
     "downloadUrl": "https://github.com/carlcs/craft-autoexpire/archive/v1.1.1.zip",
     "date": "2016-02-02T18:00:00+01:00",
