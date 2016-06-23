@@ -60,14 +60,21 @@ class AutoExpirePlugin extends BasePlugin
      *
      * @var array
      */
-    public $_handledRules = array();
+    private $_handledRules = array();
 
     /**
      * Used to keep track of entries which are handled by entries.onSaveEntry.
      *
      * @var array
      */
-    public $_handledOnEntrySave = array();
+    private $_handledOnEntrySave = array();
+
+    /**
+     * A list of of EntryModel attributes of type DateTime.
+     *
+     * @var array
+     */
+    private static $_dateAttributes = array('postDate', 'expiryDate');
 
     // Public Methods
     // =========================================================================
@@ -175,7 +182,7 @@ class AutoExpirePlugin extends BasePlugin
                 return null;
             }
 
-            if (in_array($fieldHandle, array('postDate', 'expiryDate'))) {
+            if (in_array($fieldHandle, static::$_dateAttributes)) {
                 $entry->{$fieldHandle} = $newDate;
             } else {
                 $entry->setContentFromPost(array($fieldHandle => $newDate));
